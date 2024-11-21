@@ -5,6 +5,7 @@ import { routing } from "@/i18n/routing";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { Toaster } from "sonner";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -45,6 +46,7 @@ export default async function RootLayout({
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
+        <Toaster richColors={true} />
       </body>
     </html>
   );

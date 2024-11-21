@@ -12,10 +12,11 @@ import {
 } from "./ui/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useRouter } from "@/i18n/routing";
+import { toast } from "sonner";
 
 const DEFAULT_VALUES = {
   name: "",
@@ -25,6 +26,7 @@ const DEFAULT_VALUES = {
 
 export function RegisterForm() {
   const router = useRouter();
+  const [isProcessing, setIsProcessing] = useState(false);
   const formSchema = z.object({
     name: z.string().min(3, "Name must be at least 3 characters"),
     email: z.string().email("Invalid email address"),
@@ -37,7 +39,20 @@ export function RegisterForm() {
   });
 
   const onSubmit = useCallback((data: z.infer<typeof formSchema>) => {
-    console.log(data);
+    // TODO: Replace this with your own API call
+    const promise = new Promise((resolve) => {
+      setIsProcessing(true);
+      setTimeout(() => {
+        setIsProcessing(false);
+        resolve(data);
+      }, 2000);
+    });
+
+    toast.promise(promise, {
+      loading: "Registering...",
+      success: "Registered successfully!",
+      error: "Failed to register",
+    });
   }, []);
 
   return (
@@ -58,6 +73,7 @@ export function RegisterForm() {
                       {...field}
                       type="email"
                       placeholder="freddy.le@gmail.com"
+                      disabled={isProcessing}
                     />
                   </FormControl>
                   <FormMessage />
@@ -70,7 +86,11 @@ export function RegisterForm() {
                 <FormItem>
                   <FormLabel>Name:</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Freddy" />
+                    <Input
+                      {...field}
+                      placeholder="Freddy"
+                      disabled={isProcessing}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -82,13 +102,20 @@ export function RegisterForm() {
                 <FormItem>
                   <FormLabel>Password:</FormLabel>
                   <FormControl>
-                    <Input {...field} type="password" placeholder="********" />
+                    <Input
+                      {...field}
+                      type="password"
+                      placeholder="********"
+                      disabled={isProcessing}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button className="w-full">Register</Button>
+            <Button className="w-full" disabled={isProcessing}>
+              Register
+            </Button>
           </form>
         </Form>
 
