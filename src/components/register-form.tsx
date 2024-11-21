@@ -12,11 +12,12 @@ import {
 } from "./ui/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useRouter } from "@/i18n/routing";
 import { toast } from "sonner";
+import { useTranslations } from "next-intl";
 
 const DEFAULT_VALUES = {
   name: "",
@@ -26,48 +27,57 @@ const DEFAULT_VALUES = {
 };
 
 export function RegisterForm() {
+  const t = useTranslations("register-form");
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
-  const formSchema = z
-    .object({
-    name: z.string().min(3, "Name must be at least 3 characters"),
-    email: z.string().email("Invalid email address"),
-    password: z.string().min(8, "Password must be at least 8 characters"),
-      passwordConfirm: z
-        .string()
-        .min(8, "Password must be at least 8 characters"),
-    })
-    .refine(({ password, passwordConfirm }) => password === passwordConfirm, {
-      message: "Passwords do not match",
-      path: ["passwordConfirm"],
-  });
+  const formSchema = useMemo(
+    () =>
+      z
+        .object({
+          name: z.string().min(3, t("name-invalid")),
+          email: z.string().email(t("email-invalid")),
+          password: z.string().min(8, t("password-invalid")),
+          passwordConfirm: z.string().min(8, t("password-invalid")),
+        })
+        .refine(
+          ({ password, passwordConfirm }) => password === passwordConfirm,
+          {
+            message: t("password-confirm-invalid"),
+            path: ["passwordConfirm"],
+          }
+        ),
+    [t]
+  );
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: DEFAULT_VALUES,
   });
 
-  const onSubmit = useCallback((data: z.infer<typeof formSchema>) => {
-    // TODO: Replace this with your own API call
-    const promise = new Promise((resolve) => {
-      setIsProcessing(true);
-      setTimeout(() => {
-        setIsProcessing(false);
-        resolve(data);
-      }, 2000);
-    });
+  const onSubmit = useCallback(
+    (data: z.infer<typeof formSchema>) => {
+      // TODO: Replace this with your own API call
+      const promise = new Promise((resolve) => {
+        setIsProcessing(true);
+        setTimeout(() => {
+          setIsProcessing(false);
+          resolve(data);
+        }, 2000);
+      });
 
-    toast.promise(promise, {
-      loading: "Registering...",
-      success: "Registered successfully!",
-      error: "Failed to register",
-    });
-  }, []);
+      toast.promise(promise, {
+        loading: t("register-loading"),
+        success: t("register-success"),
+        error: t("register-error"),
+      });
+    },
+    [t]
+  );
 
   return (
     <Card className="min-w-[400px]">
       <CardHeader>
-        <CardTitle>Register</CardTitle>
+        <CardTitle>{t("form-title")}</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -76,7 +86,7 @@ export function RegisterForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email:</FormLabel>
+                  <FormLabel>{t("email-label")}:</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -93,7 +103,7 @@ export function RegisterForm() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name:</FormLabel>
+                  <FormLabel>{t("name-label")}:</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -109,7 +119,7 @@ export function RegisterForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password:</FormLabel>
+                  <FormLabel>{t("password-label")}:</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -126,7 +136,7 @@ export function RegisterForm() {
               name="passwordConfirm"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password Confirm:</FormLabel>
+                  <FormLabel>{t("password-confirm-label")}:</FormLabel>
                   <FormControl>
                     <Input
                       {...field}

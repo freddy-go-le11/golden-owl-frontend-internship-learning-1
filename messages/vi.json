@@ -1,5 +1,19 @@
 {
   "test": {
     "locale": "Tiếng Việt"
+  },
+  "register-form": {
+    "name-invalid": "Tên phải có ít nhất 3 ký tự",
+    "email-invalid": "Email không hợp lệ",
+    "password-invalid": "Mật khẩu phải có ít nhất 8 ký tự",
+    "password-confirm-invalid": "Mật khẩu xác nhận không khớp",
+    "register-loading": "Đang đăng ký...",
+    "register-success": "Đăng ký thành công",
+    "register-error": "Đăng ký thất bại",
+    "form-title": "Form Đăng Ký",
+    "name-label": "Tên",
+    "email-label": "Email",
+    "password-label": "Mật khẩu",
+    "password-confirm-label": "Xác nhận mật khẩu"
   }
 }
