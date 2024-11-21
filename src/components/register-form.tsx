@@ -22,15 +22,24 @@ const DEFAULT_VALUES = {
   name: "",
   email: "",
   password: "",
+  passwordConfirm: "",
 };
 
 export function RegisterForm() {
   const router = useRouter();
   const [isProcessing, setIsProcessing] = useState(false);
-  const formSchema = z.object({
+  const formSchema = z
+    .object({
     name: z.string().min(3, "Name must be at least 3 characters"),
     email: z.string().email("Invalid email address"),
     password: z.string().min(8, "Password must be at least 8 characters"),
+      passwordConfirm: z
+        .string()
+        .min(8, "Password must be at least 8 characters"),
+    })
+    .refine(({ password, passwordConfirm }) => password === passwordConfirm, {
+      message: "Passwords do not match",
+      path: ["passwordConfirm"],
   });
 
   const form = useForm({
@@ -67,7 +76,7 @@ export function RegisterForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name:</FormLabel>
+                  <FormLabel>Email:</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -101,6 +110,23 @@ export function RegisterForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password:</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      type="password"
+                      placeholder="********"
+                      disabled={isProcessing}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="passwordConfirm"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password Confirm:</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
