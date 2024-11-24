@@ -15,5 +15,15 @@
     "email-label": "Email",
     "password-label": "Mật khẩu",
     "password-confirm-label": "Xác nhận mật khẩu"
+  },
+  "login-form": {
+    "email-invalid": "Email không hợp lệ",
+    "password-invalid": "Mật khẩu phải có ít nhất 8 ký tự",
+    "login-loading": "Đang đăng nhập...",
+    "login-success": "Đăng nhập thành công",
+    "login-error": "Đăng nhập thất bại",
+    "form-title": "Form Đăng Nhập",
+    "email-label": "Email",
+    "password-label": "Mật khẩu"
   }
 }

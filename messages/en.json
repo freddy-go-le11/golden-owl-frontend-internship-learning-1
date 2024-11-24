@@ -15,5 +15,15 @@
     "email-label": "Email",
     "password-label": "Password",
     "password-confirm-label": "Confirm Password"
+  },
+  "login-form": {
+    "email-invalid": "Email is invalid",
+    "password-invalid": "Password is least 8 characters",
+    "login-loading": "Logging in...",
+    "login-success": "Login successfully",
+    "login-error": "Login failed",
+    "form-title": "Login Form",
+    "email-label": "Email",
+    "password-label": "Password"
   }
 }
