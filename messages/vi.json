@@ -24,6 +24,12 @@
     "login-error": "Đăng nhập thất bại",
     "form-title": "Form Đăng Nhập",
     "email-label": "Email",
-    "password-label": "Mật khẩu"
+    "password-label": "Mật khẩu",
+    "forgot-password": "Quên mật khẩu?",
+    "submit": "Đăng nhập",
+    "google-login": "Đăng nhập với Google",
+    "blocked": "Tài khoản của bạn đã bị chặn",
+    "don't-have-account": "Chưa có tài khoản?",
+    "register": "Đăng ký"
   }
 }

@@ -24,6 +24,12 @@
     "login-error": "Login failed",
     "form-title": "Login Form",
     "email-label": "Email",
-    "password-label": "Password"
+    "password-label": "Password",
+    "forgot-password": "Forgot password?",
+    "submit": "Login",
+    "google-login": "Login with Google",
+    "blocked": "Your account has been blocked",
+    "don't-have-account": "Don't have an account?",
+    "register": "Register"
   }
 }

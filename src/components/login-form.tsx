@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useTranslations } from "next-intl";
 import { z } from "zod";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -26,8 +26,12 @@ const DEFAULT_VALUES = {
 
 export function LoginForm() {
   const t = useTranslations("login-form");
+  const [, setFailedAttempts] = useState(0);
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [blockTimeRemaining, setBlockTimeRemaining] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
+
   const formSchema = useMemo(
     () =>
       z.object({
@@ -42,25 +46,55 @@ export function LoginForm() {
     defaultValues: DEFAULT_VALUES,
   });
 
-  const onSubmit = useCallback(
-    (data: z.infer<typeof formSchema>) => {
-      // TODO: Replace this with your own API call
-      const promise = new Promise((resolve) => {
-        setIsProcessing(true);
-        setTimeout(() => {
-          setIsProcessing(false);
-          resolve(data);
-        }, 1000);
-      });
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (isBlocked) {
+      timer = setInterval(() => {
+        setBlockTimeRemaining((prev) => {
+          if (prev <= 1) {
+            setIsBlocked(false);
+            setFailedAttempts(0);
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => clearInterval(timer);
+  }, [isBlocked]);
 
-      toast.promise(promise, {
-        loading: t("login-loading"),
-        success: t("login-success"),
-        error: t("login-error"),
-      });
-    },
-    [t]
-  );
+  const onSubmit = useCallback(() => {
+    // TODO: Replace this with your own API call
+    const promise = async () => {
+      try {
+        setIsProcessing(true);
+
+        // Simulate API call
+        await new Promise((resolve, reject) => setTimeout(reject, 1000));
+
+        setFailedAttempts(0);
+      } catch {
+        setFailedAttempts((prev) => {
+          const newAttempts = prev + 1;
+          if (newAttempts >= 5) {
+            setIsBlocked(true);
+            setBlockTimeRemaining(5);
+          }
+          return newAttempts;
+        });
+        throw new Error("Invalid credentials");
+      } finally {
+        setIsProcessing(false);
+      }
+    };
+
+    toast.promise(promise, {
+      loading: t("login-loading"),
+      success: t("login-success"),
+      error: t("login-error"),
+    });
+  }, [t]);
 
   return (
     <Card className="min-w-[400px]">
@@ -80,7 +114,7 @@ export function LoginForm() {
                       {...field}
                       type="email"
                       placeholder="m@example.com"
-                      disabled={isProcessing}
+                      disabled={isProcessing || isBlocked}
                     />
                   </FormControl>
                   <FormMessage />
@@ -106,21 +140,27 @@ export function LoginForm() {
                       {...field}
                       type="password"
                       placeholder="********"
-                      disabled={isProcessing}
+                      disabled={isProcessing || isBlocked}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full">
-              Login
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={isProcessing || isBlocked}
+            >
+              {isBlocked
+                ? `${t("blocked")} (${blockTimeRemaining}s)`
+                : t("submit")}
             </Button>
           </form>
         </Form>
 
         <Button variant="outline" className="mt-4">
-          Login with Google
+          {t("google-login")}
         </Button>
 
         <Button
@@ -128,7 +168,8 @@ export function LoginForm() {
           variant="ghost"
           className="mt-8"
         >
-          Don&apos;t have an account? <span className="text-bold">Sign up</span>
+          {t("don't-have-account")}{" "}
+          <span className="text-bold">{t("register")}</span>
         </Button>
       </CardContent>
     </Card>
