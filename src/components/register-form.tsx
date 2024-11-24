@@ -150,7 +150,7 @@ export function RegisterForm() {
               )}
             />
             <Button className="w-full" disabled={isProcessing}>
-              Register
+              {t("submit")}
             </Button>
           </form>
         </Form>
@@ -160,7 +160,7 @@ export function RegisterForm() {
           variant="ghost"
           className="mt-8 w-full"
         >
-          Already have an account? <span className="text-bold">Login</span>
+          {t("have-account")} <span className="text-bold">{t("login")}</span>
         </Button>
       </CardContent>
     </Card>
