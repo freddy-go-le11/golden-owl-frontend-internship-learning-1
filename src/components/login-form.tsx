@@ -10,12 +10,13 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Link, useRouter } from "@/i18n/routing";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
+import { useRetry } from "@/hooks";
 import { useTranslations } from "next-intl";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,9 +28,13 @@ const DEFAULT_VALUES = {
 
 export function LoginForm() {
   const t = useTranslations("login-form");
-  const [, setFailedAttempts] = useState(0);
-  const [isBlocked, setIsBlocked] = useState(false);
-  const [blockTimeRemaining, setBlockTimeRemaining] = useState(0);
+  const { isBlocked, blockTimeRemaining, resetBlock, handleFailedAttempt } =
+    useRetry({
+      maxFailedAttempts: 5,
+      blockTime: 5,
+      userKey: "login",
+    });
+
   const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
 
@@ -47,24 +52,6 @@ export function LoginForm() {
     defaultValues: DEFAULT_VALUES,
   });
 
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (isBlocked) {
-      timer = setInterval(() => {
-        setBlockTimeRemaining((prev) => {
-          if (prev <= 1) {
-            setIsBlocked(false);
-            setFailedAttempts(0);
-            clearInterval(timer);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [isBlocked]);
-
   const onSubmit = useCallback(() => {
     // TODO: Replace this with your own API call
     const promise = async () => {
@@ -74,16 +61,9 @@ export function LoginForm() {
         // Simulate API call
         await new Promise((resolve, reject) => setTimeout(reject, 1000));
 
-        setFailedAttempts(0);
+        resetBlock();
       } catch {
-        setFailedAttempts((prev) => {
-          const newAttempts = prev + 1;
-          if (newAttempts >= 5) {
-            setIsBlocked(true);
-            setBlockTimeRemaining(5);
-          }
-          return newAttempts;
-        });
+        handleFailedAttempt();
         throw new Error("Invalid credentials");
       } finally {
         setIsProcessing(false);
@@ -95,7 +75,7 @@ export function LoginForm() {
       success: t("login-success"),
       error: t("login-error"),
     });
-  }, [t]);
+  }, [handleFailedAttempt, resetBlock, t]);
 
   return (
     <Card className="min-w-[400px]">
