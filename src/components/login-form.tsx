@@ -1,14 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { useTranslations } from "next-intl";
-import { z } from "zod";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import {
   Form,
   FormControl,
@@ -18,6 +10,15 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Link, useRouter } from "@/i18n/routing";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { useTranslations } from "next-intl";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const DEFAULT_VALUES = {
   email: "",
