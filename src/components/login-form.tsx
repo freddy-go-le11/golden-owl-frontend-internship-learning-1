@@ -136,7 +136,11 @@ export function LoginForm() {
           </form>
         </Form>
 
-        <Button variant="outline" className="mt-4">
+        <Button
+          variant="outline"
+          className="mt-4"
+          disabled={isPending || isBlocked}
+        >
           {t("google-login")}
         </Button>
 
@@ -144,6 +148,7 @@ export function LoginForm() {
           onClick={() => router.replace("/register")}
           variant="ghost"
           className="mt-8"
+          disabled={isPending || isBlocked}
         >
           {t("don't-have-account")}{" "}
           <span className="text-bold">{t("register")}</span>
