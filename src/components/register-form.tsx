@@ -9,12 +9,14 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { fetchRegister } from "@/lib/client-functions";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
 import { z } from "zod";
@@ -30,7 +32,6 @@ const DEFAULT_VALUES = {
 export function RegisterForm() {
   const t = useTranslations("register-form");
   const router = useRouter();
-  const [isProcessing, setIsProcessing] = useState(false);
   const formSchema = useMemo(
     () =>
       z
@@ -55,24 +56,20 @@ export function RegisterForm() {
     defaultValues: DEFAULT_VALUES,
   });
 
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: fetchRegister,
+    onSuccess: () => router.replace("/login"),
+  });
+
   const onSubmit = useCallback(
     (data: z.infer<typeof formSchema>) => {
-      // TODO: Replace this with your own API call
-      const promise = new Promise((resolve) => {
-        setIsProcessing(true);
-        setTimeout(() => {
-          setIsProcessing(false);
-          resolve(data);
-        }, 2000);
-      });
-
-      toast.promise(promise, {
+      toast.promise(mutateAsync(data), {
         loading: t("register-loading"),
         success: t("register-success"),
-        error: t("register-error"),
+        error: (error: Error) => t(error.message || "register-error"),
       });
     },
-    [t]
+    [mutateAsync, t]
   );
 
   return (
@@ -93,7 +90,7 @@ export function RegisterForm() {
                       {...field}
                       type="email"
                       placeholder="freddy.le@gmail.com"
-                      disabled={isProcessing}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -109,7 +106,7 @@ export function RegisterForm() {
                     <Input
                       {...field}
                       placeholder="Freddy"
-                      disabled={isProcessing}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -126,7 +123,7 @@ export function RegisterForm() {
                       {...field}
                       type="password"
                       placeholder="********"
-                      disabled={isProcessing}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
@@ -143,14 +140,14 @@ export function RegisterForm() {
                       {...field}
                       type="password"
                       placeholder="********"
-                      disabled={isProcessing}
+                      disabled={isPending}
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button className="w-full" disabled={isProcessing}>
+            <Button className="w-full" disabled={isPending}>
               {t("submit")}
             </Button>
           </form>
