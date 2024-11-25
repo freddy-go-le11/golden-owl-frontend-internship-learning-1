@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import localFont from "next/font/local";
 import { notFound } from "next/navigation";
+import { Toaster } from "sonner";
 import { routing } from "@/i18n/routing";
 
 const geistSans = localFont({
@@ -41,11 +42,12 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100dvh] flex items-center justify-center`}
       >
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
+        <Toaster richColors={true} />
       </body>
     </html>
   );
