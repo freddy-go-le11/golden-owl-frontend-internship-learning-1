@@ -14,8 +14,10 @@ import { useCallback, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { fetchLogin } from "@/lib/client-functions";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
 import { useRetry } from "@/hooks";
 import { useTranslations } from "next-intl";
 import { z } from "zod";
@@ -52,30 +54,27 @@ export function LoginForm() {
     defaultValues: DEFAULT_VALUES,
   });
 
-  const onSubmit = useCallback(() => {
-    // TODO: Replace this with your own API call
-    const promise = async () => {
-      try {
-        setIsProcessing(true);
+  const { mutateAsync } = useMutation({
+    mutationFn: fetchLogin,
+    onMutate: () => setIsProcessing(true),
+    onSuccess: () => {
+      resetBlock();
+      router.replace("/dashboard");
+    },
+    onError: () => handleFailedAttempt(),
+    onSettled: () => setIsProcessing(false),
+  });
 
-        // Simulate API call
-        await new Promise((resolve, reject) => setTimeout(reject, 1000));
-
-        resetBlock();
-      } catch {
-        handleFailedAttempt();
-        throw new Error("Invalid credentials");
-      } finally {
-        setIsProcessing(false);
-      }
-    };
-
-    toast.promise(promise, {
-      loading: t("login-loading"),
-      success: t("login-success"),
-      error: t("login-error"),
-    });
-  }, [handleFailedAttempt, resetBlock, t]);
+  const onSubmit = useCallback(
+    (data: z.infer<typeof formSchema>) => {
+      toast.promise(mutateAsync(data), {
+        loading: t("login-loading"),
+        success: t("login-success"),
+        error: t("login-error"),
+      });
+    },
+    [mutateAsync, t]
+  );
 
   return (
     <Card className="min-w-[400px]">
