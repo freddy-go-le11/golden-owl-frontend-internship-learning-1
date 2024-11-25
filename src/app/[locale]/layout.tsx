@@ -1,11 +1,12 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
 import "../globals.css";
-import { routing } from "@/i18n/routing";
+
+import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
+import localFont from "next/font/local";
 import { notFound } from "next/navigation";
 import { Toaster } from "sonner";
+import { routing } from "@/i18n/routing";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
