@@ -1,6 +1,5 @@
 "use client";
 
-import { useForm } from "react-hook-form";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import {
   Form,
@@ -10,14 +9,16 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import { useCallback, useMemo, useState } from "react";
+
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { useRouter } from "@/i18n/routing";
+import { useTranslations } from "next-intl";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useMemo, useState } from "react";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { useRouter } from "@/i18n/routing";
-import { toast } from "sonner";
-import { useTranslations } from "next-intl";
 
 const DEFAULT_VALUES = {
   name: "",
@@ -150,7 +151,7 @@ export function RegisterForm() {
               )}
             />
             <Button className="w-full" disabled={isProcessing}>
-              Register
+              {t("submit")}
             </Button>
           </form>
         </Form>
@@ -160,7 +161,7 @@ export function RegisterForm() {
           variant="ghost"
           className="mt-8 w-full"
         >
-          Already have an account? <span className="text-bold">Login</span>
+          {t("have-account")} <span className="text-bold">{t("login")}</span>
         </Button>
       </CardContent>
     </Card>

@@ -14,7 +14,10 @@
     "name-label": "Name",
     "email-label": "Email",
     "password-label": "Password",
-    "password-confirm-label": "Confirm Password"
+    "password-confirm-label": "Confirm Password",
+    "submit": "Register",
+    "have-account": "Already have an account?",
+    "login": "Login"
   },
   "login-form": {
     "email-invalid": "Email is invalid",

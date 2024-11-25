@@ -14,7 +14,10 @@
     "name-label": "Tên",
     "email-label": "Email",
     "password-label": "Mật khẩu",
-    "password-confirm-label": "Xác nhận mật khẩu"
+    "password-confirm-label": "Xác nhận mật khẩu",
+    "submit": "Đăng ký",
+    "have-account": "Đã có tài khoản?",
+    "login": "Đăng nhập"
   },
   "login-form": {
     "email-invalid": "Email không hợp lệ",
