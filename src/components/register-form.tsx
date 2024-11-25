@@ -66,7 +66,7 @@ export function RegisterForm() {
       toast.promise(mutateAsync(data), {
         loading: t("register-loading"),
         success: t("register-success"),
-        error: (error: Error) => t(error.message || "register-error"),
+        error: (error: Error) => t(error?.message || "register-error"),
       });
     },
     [mutateAsync, t]

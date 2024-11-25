@@ -9,7 +9,7 @@ export const fetchRegister = async (data: {
     body: JSON.stringify(data),
   });
 
-  if (!res.ok){
+  if (!res.ok) {
     if (res.status === 409) {
       throw new Error("email-exists");
     }
