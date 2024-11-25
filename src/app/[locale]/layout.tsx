@@ -28,7 +28,7 @@ export default async function RootLayout({
   children,
 }: Readonly<IDefaultLayoutProps>) {
   const { locale } = await params;
-  // Ensure that the incoming `locale` is valid
+
   if (!routing.locales.includes(locale as TLocale)) {
     notFound();
   }
