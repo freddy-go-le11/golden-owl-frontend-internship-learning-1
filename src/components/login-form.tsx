@@ -102,16 +102,7 @@ export function LoginForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <div className="flex justify-between items-center">
-                    <FormLabel>{t("password-label")}</FormLabel>
-                    <Link
-                      tabIndex={-1}
-                      href="/reset-password"
-                      className="inline-block text-sm underline"
-                    >
-                      {t("forgot-password")}
-                    </Link>
-                  </div>
+                  <FormLabel>{t("password-label")}</FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -124,6 +115,13 @@ export function LoginForm() {
                 </FormItem>
               )}
             />
+            <Link
+              tabIndex={-1}
+              href="/reset-password"
+              className="inline-block text-sm underline mt-4 w-full text-center"
+            >
+              {t("forgot-password")}
+            </Link>
             <Button
               type="submit"
               className="w-full"
