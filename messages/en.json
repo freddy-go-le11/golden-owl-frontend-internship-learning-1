@@ -1,5 +1,22 @@
 {
   "test": {
     "locale": "English"
+  },
+  "register-form": {
+    "name-invalid": "Name is least 3 characters",
+    "email-invalid": "Email is invalid",
+    "password-invalid": "Password is least 8 characters",
+    "password-confirm-invalid": "Password confirm is not match",
+    "register-loading": "Registering...",
+    "register-success": "Register successfully",
+    "register-error": "Register failed",
+    "form-title": "Register Form",
+    "name-label": "Name",
+    "email-label": "Email",
+    "password-label": "Password",
+    "password-confirm-label": "Confirm Password",
+    "submit": "Register",
+    "have-account": "Already have an account?",
+    "login": "Login"
   }
 }
