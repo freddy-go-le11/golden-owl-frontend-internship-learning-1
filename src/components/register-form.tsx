@@ -13,7 +13,7 @@ import { useCallback, useMemo } from "react";
 
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { fetchRegister } from "@/lib/client-functions";
+import { fetchRegister } from "@/lib/services/client";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";

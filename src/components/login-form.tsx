@@ -14,7 +14,7 @@ import { useCallback, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { fetchLogin } from "@/lib/client-functions";
+import { fetchLogin } from "@/lib/services/client";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";

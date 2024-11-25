@@ -1,3 +1,5 @@
+"use client";
+
 export const fetchRegister = async (data: {
   name: string;
   email: string;
