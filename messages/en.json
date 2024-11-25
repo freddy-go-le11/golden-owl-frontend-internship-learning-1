@@ -18,5 +18,21 @@
     "submit": "Register",
     "have-account": "Already have an account?",
     "login": "Login"
+  },
+  "login-form": {
+    "email-invalid": "Email is invalid",
+    "password-invalid": "Password is least 8 characters",
+    "login-loading": "Logging in...",
+    "login-success": "Login successfully",
+    "login-error": "Login failed",
+    "form-title": "Login Form",
+    "email-label": "Email",
+    "password-label": "Password",
+    "forgot-password": "Forgot password?",
+    "submit": "Login",
+    "google-login": "Login with Google",
+    "blocked": "Your account has been blocked",
+    "don't-have-account": "Don't have an account?",
+    "register": "Register"
   }
 }
