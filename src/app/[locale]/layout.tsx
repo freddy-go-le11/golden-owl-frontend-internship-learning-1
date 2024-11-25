@@ -1,11 +1,9 @@
 import "../globals.css";
 
+import { GlobalProvider } from "@/providers";
 import type { Metadata } from "next";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
 import localFont from "next/font/local";
 import { notFound } from "next/navigation";
-import { Toaster } from "sonner";
 import { routing } from "@/i18n/routing";
 
 const geistSans = localFont({
@@ -30,24 +28,17 @@ export default async function RootLayout({
   children,
 }: Readonly<IDefaultLayoutProps>) {
   const { locale } = await params;
-  // Ensure that the incoming `locale` is valid
+
   if (!routing.locales.includes(locale as TLocale)) {
     notFound();
   }
-
-  // Providing all messages to the client
-  // side is the easiest way to get started
-  const messages = await getMessages();
 
   return (
     <html lang={locale}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-[100dvh] flex items-center justify-center`}
       >
-        <NextIntlClientProvider messages={messages}>
-          {children}
-        </NextIntlClientProvider>
-        <Toaster richColors={true} />
+        <GlobalProvider>{children}</GlobalProvider>
       </body>
     </html>
   );
