@@ -10,7 +10,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Link, useRouter } from "@/i18n/routing";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,7 +37,6 @@ export function LoginForm() {
       userKey: "login",
     });
 
-  const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
 
   const formSchema = useMemo(
@@ -54,15 +53,13 @@ export function LoginForm() {
     defaultValues: DEFAULT_VALUES,
   });
 
-  const { mutateAsync } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: fetchLogin,
-    onMutate: () => setIsProcessing(true),
     onSuccess: () => {
       resetBlock();
       router.replace("/dashboard");
     },
     onError: () => handleFailedAttempt(),
-    onSettled: () => setIsProcessing(false),
   });
 
   const onSubmit = useCallback(
@@ -94,7 +91,7 @@ export function LoginForm() {
                       {...field}
                       type="email"
                       placeholder="m@example.com"
-                      disabled={isProcessing || isBlocked}
+                      disabled={isPending || isBlocked}
                     />
                   </FormControl>
                   <FormMessage />
@@ -120,7 +117,7 @@ export function LoginForm() {
                       {...field}
                       type="password"
                       placeholder="********"
-                      disabled={isProcessing || isBlocked}
+                      disabled={isPending || isBlocked}
                     />
                   </FormControl>
                   <FormMessage />
@@ -130,7 +127,7 @@ export function LoginForm() {
             <Button
               type="submit"
               className="w-full"
-              disabled={isProcessing || isBlocked}
+              disabled={isPending || isBlocked}
             >
               {isBlocked
                 ? `${t("blocked")} (${blockTimeRemaining}s)`
