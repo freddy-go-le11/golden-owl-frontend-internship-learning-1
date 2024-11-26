@@ -20,6 +20,9 @@ export const fetchRegister = async (data: {
 
     throw new Error("register-error");
   }
+
+  const payload = await res.json();
+  return payload;
 };
 
 export const fetchLogin = async (data: {
