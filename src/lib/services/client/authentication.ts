@@ -20,6 +20,21 @@ export const fetchRegister = async (data: {
   }
 };
 
-export const fetchLogin = async () => {
-  await new Promise((resolve, reject) => setTimeout(reject, 1000));
+export const fetchLogin = async (data: {
+  email: string;
+  password: string;
+}) => {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    if ([401, 404].includes(res.status)) {
+      throw new Error("invalid-credentials");
+    }
+
+    throw new Error("login-error");
+  }
 };
