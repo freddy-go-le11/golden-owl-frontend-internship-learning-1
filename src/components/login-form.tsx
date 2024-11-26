@@ -57,7 +57,7 @@ export function LoginForm() {
     mutationFn: fetchLogin,
     onSuccess: () => {
       resetBlock();
-      router.replace("/dashboard");
+      router.replace("/");
     },
     onError: () => handleFailedAttempt(),
   });
