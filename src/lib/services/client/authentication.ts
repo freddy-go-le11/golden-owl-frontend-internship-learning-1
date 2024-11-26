@@ -37,7 +37,7 @@ export const fetchLogin = async (data: {
   });
 
   if (!res.ok) {
-    if ([401, 404].includes(res.status)) {
+    if ([StatusCodes.UNAUTHORIZED, StatusCodes.NOT_FOUND].includes(res.status)) {
       throw new Error("invalid-credentials");
     }
 
