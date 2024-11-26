@@ -1,5 +1,7 @@
 "use client";
 
+import { StatusCodes } from "http-status-codes";
+
 export const fetchRegister = async (data: {
   name: string;
   email: string;
@@ -12,7 +14,7 @@ export const fetchRegister = async (data: {
   });
 
   if (!res.ok) {
-    if (res.status === 409) {
+    if (res.status === StatusCodes.CONFLICT) {
       throw new Error("email-exists");
     }
 
