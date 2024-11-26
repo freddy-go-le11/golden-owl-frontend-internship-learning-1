@@ -34,6 +34,7 @@
     "google-login": "Đăng nhập với Google",
     "blocked": "Tài khoản của bạn đã bị chặn",
     "don't-have-account": "Chưa có tài khoản?",
-    "register": "Đăng ký"
+    "register": "Đăng ký",
+    "invalid-credentials": "Thông tin đăng nhập không hợp lệ"
   }
 }
