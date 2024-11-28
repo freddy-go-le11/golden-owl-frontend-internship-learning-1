@@ -8,3 +8,6 @@ export const DAY_IN_MILLISECONDS = HOUR_IN_MILLISECONDS * 24;
 
 export const COOKIE_ACCESS_TOKEN_KEY = "accessToken";
 export const COOKIE_REFRESH_TOKEN_KEY = "refreshToken";
+
+export const OAUTH2_CLIENT_ID = process.env
+  .NEXT_PUBLIC_OAUTH_CLIENT_ID as string;

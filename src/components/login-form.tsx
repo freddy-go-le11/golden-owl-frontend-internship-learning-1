@@ -37,7 +37,7 @@ export function LoginForm() {
       userKey: "login",
     });
 
-  const { login } = useAuth();
+  const { login, googleLogin } = useAuth();
 
   const router = useRouter();
 
@@ -55,24 +55,24 @@ export function LoginForm() {
     defaultValues: DEFAULT_VALUES,
   });
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: login,
-    onSuccess: () => {
-      resetBlock();
-      router.replace("/");
-    },
-    onError: () => handleFailedAttempt(),
-  });
+  const { mutateAsync: mutateLoginAsync, isPending: isLoginPending } =
+    useMutation({
+      mutationFn: login,
+      onSuccess: resetBlock,
+      onError: () => handleFailedAttempt(),
+    });
+
+  const isPending = isLoginPending;
 
   const onSubmit = useCallback(
     (data: z.infer<typeof formSchema>) => {
-      toast.promise(mutateAsync(data), {
+      toast.promise(mutateLoginAsync(data), {
         loading: t("login-loading"),
         success: t("login-success"),
         error: (error: Error) => t(error?.message ?? "login-error"),
       });
     },
-    [mutateAsync, t]
+    [mutateLoginAsync, t]
   );
 
   return (
@@ -140,6 +140,7 @@ export function LoginForm() {
           variant="outline"
           className="mt-4"
           disabled={isPending || isBlocked}
+          onClick={googleLogin}
         >
           {t("google-login")}
         </Button>
