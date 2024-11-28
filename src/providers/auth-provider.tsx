@@ -8,12 +8,14 @@ import {
   useState,
 } from "react";
 
+import { fetchLogin } from "@/lib/services/client";
 import { fetchLogout } from "@/lib/services/server";
 
 interface IAuthContextType {
   data?: TSession;
   update: (__props: TSession) => void;
-  logout: () => void;
+  login: (__data: { email: string; password: string }) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<IAuthContextType | undefined>(undefined);
@@ -26,13 +28,22 @@ export const AuthProvider = ({
   children: ReactNode;
 }) => {
   const [user, setUser] = useState(data);
-  const logout = useCallback(() => {
-    fetchLogout();
+  const logout = useCallback(async () => {
+    await fetchLogout();
     setUser(undefined);
   }, []);
+  const login = useCallback(
+    async (data: { email: string; password: string }) => {
+      const session = await fetchLogin(data);
+      setUser(session);
+    },
+    []
+  );
 
   return (
-    <AuthContext.Provider value={{ data: user, update: setUser, logout }}>
+    <AuthContext.Provider
+      value={{ data: user, update: setUser, login, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );

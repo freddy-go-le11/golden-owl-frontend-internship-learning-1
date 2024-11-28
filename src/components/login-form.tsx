@@ -14,8 +14,8 @@ import { useCallback, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { fetchLogin } from "@/lib/services/client";
 import { toast } from "sonner";
+import { useAuth } from "@/providers/auth-provider";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { useRetry } from "@/hooks";
@@ -37,6 +37,8 @@ export function LoginForm() {
       userKey: "login",
     });
 
+  const { login } = useAuth();
+
   const router = useRouter();
 
   const formSchema = useMemo(
@@ -54,7 +56,7 @@ export function LoginForm() {
   });
 
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: fetchLogin,
+    mutationFn: login,
     onSuccess: () => {
       resetBlock();
       router.replace("/");

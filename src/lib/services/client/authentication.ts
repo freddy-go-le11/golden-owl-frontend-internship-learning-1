@@ -42,4 +42,7 @@ export const fetchLogin = async (data: { email: string; password: string }) => {
 
     throw new Error("login-error");
   }
+
+  const payload = await res.json();
+  return payload.data;
 };
