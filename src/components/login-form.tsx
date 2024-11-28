@@ -14,8 +14,8 @@ import { useCallback, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { fetchLogin } from "@/lib/services/client";
 import { toast } from "sonner";
+import { useAuth } from "@/providers/auth-provider";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { useRetry } from "@/hooks";
@@ -37,6 +37,8 @@ export function LoginForm() {
       userKey: "login",
     });
 
+  const { login, googleLogin } = useAuth();
+
   const router = useRouter();
 
   const formSchema = useMemo(
@@ -53,24 +55,24 @@ export function LoginForm() {
     defaultValues: DEFAULT_VALUES,
   });
 
-  const { mutateAsync, isPending } = useMutation({
-    mutationFn: fetchLogin,
-    onSuccess: () => {
-      resetBlock();
-      router.replace("/");
-    },
-    onError: () => handleFailedAttempt(),
-  });
+  const { mutateAsync: mutateLoginAsync, isPending: isLoginPending } =
+    useMutation({
+      mutationFn: login,
+      onSuccess: resetBlock,
+      onError: () => handleFailedAttempt(),
+    });
+
+  const isPending = isLoginPending;
 
   const onSubmit = useCallback(
     (data: z.infer<typeof formSchema>) => {
-      toast.promise(mutateAsync(data), {
+      toast.promise(mutateLoginAsync(data), {
         loading: t("login-loading"),
         success: t("login-success"),
         error: (error: Error) => t(error?.message ?? "login-error"),
       });
     },
-    [mutateAsync, t]
+    [mutateLoginAsync, t]
   );
 
   return (
@@ -138,6 +140,7 @@ export function LoginForm() {
           variant="outline"
           className="mt-4"
           disabled={isPending || isBlocked}
+          onClick={googleLogin}
         >
           {t("google-login")}
         </Button>

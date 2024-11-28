@@ -1,5 +1,7 @@
 import { AuthProvider } from "./auth-provider";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { NextIntlClientProvider } from "next-intl";
+import { OAUTH2_CLIENT_ID } from "@/common/constants";
 import { QueryProvider } from "./query-client-provider";
 import React from "react";
 import { ThemeProvider } from "./theme-provider";
@@ -18,15 +20,17 @@ export default async function GlobalProvider({
   ]);
 
   return (
-    <AuthProvider data={session}>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        <QueryProvider>
-          <NextIntlClientProvider messages={messages}>
-            {children}
-            <Toaster richColors />
-          </NextIntlClientProvider>
-        </QueryProvider>
-      </ThemeProvider>
-    </AuthProvider>
+    <GoogleOAuthProvider clientId={OAUTH2_CLIENT_ID}>
+      <AuthProvider data={session}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <QueryProvider>
+            <NextIntlClientProvider messages={messages}>
+              {children}
+              <Toaster richColors />
+            </NextIntlClientProvider>
+          </QueryProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </GoogleOAuthProvider>
   );
 }

@@ -7,13 +7,18 @@ import {
   useContext,
   useState,
 } from "react";
+import { fetchGoogleLogin, fetchLogin } from "@/lib/services/client";
 
 import { fetchLogout } from "@/lib/services/server";
+import { useGoogleLogin } from "@react-oauth/google";
+import { useRouter } from "@/i18n/routing";
 
 interface IAuthContextType {
   data?: TSession;
   update: (__props: TSession) => void;
-  logout: () => void;
+  login: (__data: { email: string; password: string }) => Promise<void>;
+  googleLogin: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<IAuthContextType | undefined>(undefined);
@@ -25,14 +30,32 @@ export const AuthProvider = ({
   data: TSession | undefined;
   children: ReactNode;
 }) => {
+  const router = useRouter();
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (res) => {
+      const session = await fetchGoogleLogin(res);
+      setUser(session);
+      router.refresh();
+    },
+  });
   const [user, setUser] = useState(data);
-  const logout = useCallback(() => {
-    fetchLogout();
+  const logout = useCallback(async () => {
+    await fetchLogout();
     setUser(undefined);
   }, []);
+  const login = useCallback(
+    async (data: { email: string; password: string }) => {
+      const session = await fetchLogin(data);
+      setUser(session);
+      router.refresh();
+    },
+    [router]
+  );
 
   return (
-    <AuthContext.Provider value={{ data: user, update: setUser, logout }}>
+    <AuthContext.Provider
+      value={{ data: user, update: setUser, login, googleLogin, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
