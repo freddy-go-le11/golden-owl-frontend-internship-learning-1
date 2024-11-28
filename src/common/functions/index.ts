@@ -37,8 +37,8 @@ export async function customizeFetch(
   params: ICustomizeFetchParams
 ): Promise<[any, null] | [null, ResponseError]> {
   const { url, method, metadata } = Object.assign(
-    params,
-    DEFAULT_CUSTOMIZE_FETCH_PARAMS
+    DEFAULT_CUSTOMIZE_FETCH_PARAMS,
+    params
   );
 
   return errorHandler(async () => {
