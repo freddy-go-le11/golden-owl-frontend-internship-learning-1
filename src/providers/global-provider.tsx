@@ -2,6 +2,7 @@ import { AuthProvider } from "./auth-provider";
 import { NextIntlClientProvider } from "next-intl";
 import { QueryProvider } from "./query-client-provider";
 import React from "react";
+import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { fetchAuthSession } from "@/lib/services/server";
 import { getMessages } from "next-intl/server";
@@ -18,12 +19,14 @@ export default async function GlobalProvider({
 
   return (
     <AuthProvider data={session}>
-      <QueryProvider>
-        <NextIntlClientProvider messages={messages}>
-          {children}
-          <Toaster richColors />
-        </NextIntlClientProvider>
-      </QueryProvider>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <QueryProvider>
+          <NextIntlClientProvider messages={messages}>
+            {children}
+            <Toaster richColors />
+          </NextIntlClientProvider>
+        </QueryProvider>
+      </ThemeProvider>
     </AuthProvider>
   );
 }
