@@ -57,18 +57,21 @@ export function LoginForm() {
     mutationFn: fetchLogin,
     onSuccess: () => {
       resetBlock();
-      router.replace("/dashboard");
+      router.replace("/");
     },
     onError: () => handleFailedAttempt(),
   });
 
-  const onSubmit = useCallback(() => {
-    toast.promise(mutateAsync, {
-      loading: t("login-loading"),
-      success: t("login-success"),
-      error: t("login-error"),
-    });
-  }, [mutateAsync, t]);
+  const onSubmit = useCallback(
+    (data: z.infer<typeof formSchema>) => {
+      toast.promise(mutateAsync(data), {
+        loading: t("login-loading"),
+        success: t("login-success"),
+        error: (error: Error) => t(error?.message ?? "login-error"),
+      });
+    },
+    [mutateAsync, t]
+  );
 
   return (
     <Card className="min-w-[400px]">
