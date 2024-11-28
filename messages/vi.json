@@ -17,7 +17,8 @@
     "password-confirm-label": "Xác nhận mật khẩu",
     "submit": "Đăng ký",
     "have-account": "Đã có tài khoản?",
-    "login": "Đăng nhập"
+    "login": "Đăng nhập",
+    "email-exists": "Email đã tồn tại"
   },
   "login-form": {
     "email-invalid": "Email không hợp lệ",

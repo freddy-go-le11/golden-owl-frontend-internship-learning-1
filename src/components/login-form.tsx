@@ -14,7 +14,7 @@ import { useCallback, useMemo } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { fetchLogin } from "@/lib/client-functions";
+import { fetchLogin } from "@/lib/services/client";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
@@ -62,16 +62,13 @@ export function LoginForm() {
     onError: () => handleFailedAttempt(),
   });
 
-  const onSubmit = useCallback(
-    (data: z.infer<typeof formSchema>) => {
-      toast.promise(mutateAsync(data), {
-        loading: t("login-loading"),
-        success: t("login-success"),
-        error: t("login-error"),
-      });
-    },
-    [mutateAsync, t]
-  );
+  const onSubmit = useCallback(() => {
+    toast.promise(mutateAsync, {
+      loading: t("login-loading"),
+      success: t("login-success"),
+      error: t("login-error"),
+    });
+  }, [mutateAsync, t]);
 
   return (
     <Card className="min-w-[400px]">
