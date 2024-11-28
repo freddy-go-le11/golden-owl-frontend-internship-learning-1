@@ -1,8 +1,18 @@
+import { getTranslations, setRequestLocale } from "next-intl/server";
+
 import { DisplayMe } from "@/components/display-me";
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { routing } from "@/i18n/routing";
 
-export default async function Home() {
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export default async function Home({ params }: IDefaultPageProps) {
+  const { locale } = await params;
+
+  setRequestLocale(locale);
+  
   const t = await getTranslations("test");
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center flex-1 p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
