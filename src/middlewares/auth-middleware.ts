@@ -4,7 +4,8 @@ import {
 } from "@/common/constants";
 import { NextFetchEvent, NextMiddleware, NextResponse } from "next/server";
 
-import { NextAuthRequest } from "@/types/interface";
+import { MiddlewareFactory } from "@/types/import-type";
+import { NextAuthRequest } from "@/types/import-interface";
 import { fetchAuthSession } from "@/lib/services/server";
 
 const ONLY_UNAUTHENTICATED_PAGES = ["/login", "/register"];

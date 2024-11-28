@@ -5,5 +5,3 @@ type TSession = {
   email: string;
   role: ENUM_USER_ROLE;
 };
-
-type MiddlewareFactory = (middleware: NextMiddleware) => NextMiddleware;
