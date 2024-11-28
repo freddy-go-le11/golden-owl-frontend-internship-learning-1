@@ -1,7 +1,9 @@
+import { AuthProvider } from "./auth-provider";
 import { NextIntlClientProvider } from "next-intl";
 import { QueryProvider } from "./query-client-provider";
 import React from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { fetchAuthSession } from "@/lib/services/server";
 import { getMessages } from "next-intl/server";
 
 export default async function GlobalProvider({
@@ -9,14 +11,19 @@ export default async function GlobalProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [messages] = await Promise.all([getMessages()]);
+  const [messages, session] = await Promise.all([
+    getMessages(),
+    fetchAuthSession(),
+  ]);
 
   return (
-    <QueryProvider>
-      <NextIntlClientProvider messages={messages}>
-        {children}
-        <Toaster richColors />
-      </NextIntlClientProvider>
-    </QueryProvider>
+    <AuthProvider data={session}>
+      <QueryProvider>
+        <NextIntlClientProvider messages={messages}>
+          {children}
+          <Toaster richColors />
+        </NextIntlClientProvider>
+      </QueryProvider>
+    </AuthProvider>
   );
 }

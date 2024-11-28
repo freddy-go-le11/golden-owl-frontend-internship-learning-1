@@ -25,10 +25,7 @@ export const fetchRegister = async (data: {
   return payload;
 };
 
-export const fetchLogin = async (data: {
-  email: string;
-  password: string;
-}) => {
+export const fetchLogin = async (data: { email: string; password: string }) => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -37,7 +34,9 @@ export const fetchLogin = async (data: {
   });
 
   if (!res.ok) {
-    if ([StatusCodes.UNAUTHORIZED, StatusCodes.NOT_FOUND].includes(res.status)) {
+    if (
+      [StatusCodes.UNAUTHORIZED, StatusCodes.NOT_FOUND].includes(res.status)
+    ) {
       throw new Error("invalid-credentials");
     }
 
