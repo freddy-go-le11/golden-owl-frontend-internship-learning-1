@@ -2,66 +2,79 @@
 
 import { StatusCodes } from "http-status-codes";
 import { TokenResponse } from "@react-oauth/google";
+import { customizeFetch } from "@/common/functions";
+
+const MAP_REGISTER_ERRORS = {
+  [StatusCodes.CONFLICT]: "email-exists",
+};
 
 export const fetchRegister = async (data: {
   name: string;
   email: string;
   password: string;
 }) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
+  const [payload, error] = await customizeFetch({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    metadata: { body: JSON.stringify(data) },
   });
 
-  if (!res.ok) {
-    if (res.status === StatusCodes.CONFLICT) {
-      throw new Error("email-exists");
-    }
+  if (error)
+    throw new Error(
+      MAP_REGISTER_ERRORS[error.code as keyof typeof MAP_REGISTER_ERRORS] ??
+        "register-error"
+    );
 
-    throw new Error("register-error");
-  }
-
-  const payload = await res.json();
   return payload;
 };
 
+const MAP_LOGIN_ERRORS = {
+  [StatusCodes.UNAUTHORIZED]: "invalid-credentials",
+  [StatusCodes.NOT_FOUND]: "invalid-credentials",
+};
+
 export const fetchLogin = async (data: { email: string; password: string }) => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+  const [payload, error] = await customizeFetch({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-    credentials: "include",
+    metadata: { body: JSON.stringify(data) },
   });
 
-  if (!res.ok) {
-    if (
-      [StatusCodes.UNAUTHORIZED, StatusCodes.NOT_FOUND].includes(res.status)
-    ) {
-      throw new Error("invalid-credentials");
-    }
+  if (error)
+    throw new Error(
+      MAP_LOGIN_ERRORS[error.code as keyof typeof MAP_LOGIN_ERRORS] ??
+        "login-error"
+    );
 
-    throw new Error("login-error");
-  }
-
-  const payload = await res.json();
-  return payload.data;
+  return payload;
 };
 
 export const fetchGoogleLogin = async (
   params: Omit<TokenResponse, "error" | "error_description" | "error_uri">
 ) => {
+  const [payload, error] = await customizeFetch({
+    url: `${process.env.NEXT_PUBLIC_API_URL}/auth/login/google`,
+    method: "POST",
+    metadata: { body: JSON.stringify(params) },
+  });
+
+  if (error) throw new Error("google-login-error");
+
+  return payload;
+};
+
+export const fetchResetPassword = async (data: { email: string }) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/auth/login/google`,
+    `${process.env.NEXT_PUBLIC_API_URL}/auth/reset-password`,
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(params),
+      body: JSON.stringify(data),
       credentials: "include",
     }
   );
 
-  if (!res.ok) throw new Error("google-login-error");
+  if (!res.ok) throw new Error("reset-password-error");
 
   const payload = await res.json();
   return payload.data;
