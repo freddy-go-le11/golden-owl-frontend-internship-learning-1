@@ -42,15 +42,16 @@ export async function customizeFetch(
   );
 
   return errorHandler(async () => {
-    const res = await fetch(url, {
+    const config = {
       method: method,
-      credentials: "include",
+      credentials: "include" as RequestCredentials,
       ...metadata,
       headers: {
         "Content-Type": "application/json",
         ...(metadata?.headers ?? {}),
       },
-    });
+    };
+    const res = await fetch(url, config);
 
     if (!res.ok) throw new ResponseError(res);
 
